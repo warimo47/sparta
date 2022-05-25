@@ -8,17 +8,17 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,14 +30,17 @@
         * {
             font-family: 'Stylish', sans-serif;
         }
+
         .wrap {
             width: 900px;
             margin: auto;
         }
+
         .comment {
             color: blue;
             font-weight: bold;
         }
+
         #post-box {
             width: 500px;
             margin: 20px auto;
@@ -48,9 +51,49 @@
         }
     </style>
     <script>
+        $(document).ready(function () {
+            $(".card-columns").empty()
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "http://spartacodingclub.shop/post",
+                data: {},
+                success: function (response) {
+                    let rows = response['articles']
+
+                    for (let i = 0; i < rows.length; ++i) {
+                        let comment = rows[i]['comment']
+                        let desc = rows[i]['desc']
+                        let image = rows[i]['image']
+                        let title = rows[i]['title']
+                        let url = rows[i]['url']
+
+                        console.log(comment, desc, image, title, url)
+
+                        let temp_html = `<div class="card">
+                                             <img class="card-img-top"
+                                                 src="${image}"
+                                                 alt="Card image cap">
+                                             <div class="card-body">
+                                                 <a href="${url}">${title}</a>
+                                                 <p class="card-text">${desc}</p>
+                                                 <p class="comment">${comment}</p>
+                                             </div>
+                                         </div>`
+
+                        $(".card-columns").append(temp_html)
+
+                    }
+                }
+            })
+        }
+
         let count = 1;
-        function hey()
-        {
+
+        function hey() {
             if (count % 2 == 0) {
                 alert('짝수입니다!');
             } else {
@@ -58,6 +101,7 @@
             }
             count += 1;
         }
+
         function togglePostingBox() {
             if ($('#post-box').css('display') == 'none') {
                 $('#post-box').show();
@@ -71,83 +115,90 @@
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="jumbotron">
-            <h1 class="display-4">나홀로 링크 메모장!</h1>
-            <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다.</p>
-            <hr class="my-4">
-            <p class="lead">
-                <a onclick="togglePostingBox()()" id="btn-posting-box" class="btn btn-primary btn-lg" href="#" role="button">포스팅박스 열기</a>
-            </p>
+<div class="wrap">
+    <div class="jumbotron">
+        <h1 class="display-4">나홀로 링크 메모장!</h1>
+        <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다.</p>
+        <hr class="my-4">
+        <p class="lead">
+            <a onclick="togglePostingBox()()" id="btn-posting-box" class="btn btn-primary btn-lg" href="#"
+               role="button">포스팅박스 열기</a>
+        </p>
+    </div>
+    <div id="post-box">
+        <div class="form-group">
+            <label>아티클 URL</label>
+            <input class="form-control" id="article-url" placeholder="">
         </div>
-        <div id="post-box">
-            <div class="form-group">
-                <label>아티클 URL</label>
-                <input class="form-control" id="article-url" placeholder="">
-            </div>
-            <div class="form-group">
-                <label>간단 코멘트</label>
-                <textarea class="form-control" rows="2"></textarea>
-            </div>
-            <button type="button" class="btn btn-primary">기사저장</button>
+        <div class="form-group">
+            <label>간단 코멘트</label>
+            <textarea class="form-control" rows="2"></textarea>
         </div>
-        <div class="card-columns" id="cards-box">
-            <div class="card">
-                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
-                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                    <p class="comment">여기에 코멘트가 들어갑니다.</p>
-                </div>
+        <button type="button" class="btn btn-primary">기사저장</button>
+    </div>
+    <div class="card-columns" id="cards-box">
+        <div class="card">
+            <img class="card-img-top"
+                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                 alt="Card image cap">
+            <div class="card-body">
+                <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
+                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                <p class="comment">여기에 코멘트가 들어갑니다.</p>
             </div>
-            <div class="card">
-                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
-                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                    <p class="comment">여기에 코멘트가 들어갑니다.</p>
-                </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top"
+                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                 alt="Card image cap">
+            <div class="card-body">
+                <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
+                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                <p class="comment">여기에 코멘트가 들어갑니다.</p>
             </div>
-            <div class="card">
-                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
-                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                    <p class="comment">여기에 코멘트가 들어갑니다.</p>
-                </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top"
+                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                 alt="Card image cap">
+            <div class="card-body">
+                <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
+                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                <p class="comment">여기에 코멘트가 들어갑니다.</p>
             </div>
-            <div class="card">
-                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
-                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                    <p class="comment">여기에 코멘트가 들어갑니다.</p>
-                </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top"
+                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                 alt="Card image cap">
+            <div class="card-body">
+                <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
+                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                <p class="comment">여기에 코멘트가 들어갑니다.</p>
             </div>
-            <div class="card">
-                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
-                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                    <p class="comment">여기에 코멘트가 들어갑니다.</p>
-                </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top"
+                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                 alt="Card image cap">
+            <div class="card-body">
+                <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
+                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                <p class="comment">여기에 코멘트가 들어갑니다.</p>
             </div>
-            <div class="card">
-                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
-                    <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                    <p class="comment">여기에 코멘트가 들어갑니다.</p>
-                </div>
+        </div>
+        <div class="card">
+            <img class="card-img-top"
+                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
+                 alt="Card image cap">
+            <div class="card-body">
+                <a href="https://naver.com">여기 기사 제목이 들어가죠</a>
+                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
+                <p class="comment">여기에 코멘트가 들어갑니다.</p>
             </div>
         </div>
     </div>
+</div>
 </body>
 
 </html>
