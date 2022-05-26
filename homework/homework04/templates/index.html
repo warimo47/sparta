@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <title>스파르타 팝니다.</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Jua&family=Stylish&display=swap" rel="stylesheet">
+
+        <style>
+            * {
+                font-family: 'Stylish', sans-serif;
+            }
+            .wrap {
+                width: 900px;
+                margin: auto;
+            }
+            .card-img {
+                border-radius: 50px;
+                margin-bottom: 30px;
+            }
+            .itemName {
+                width: 400px;
+                display: inline-block;
+            }
+            .orderBtn {
+                margin: auto;
+                display: block;
+            }
+            .table {
+                margin-top: 30px;
+            }
+            #rate {
+                color: blue;
+            }
+        </style>
+
+        <script>
+            $(document).ready(function () {
+                loadExchangeRate()
+                initializeOrderList()
+            });
+
+            function loadExchangeRate() {
+                $.ajax({
+                    type: "GET",
+                    url: "http://spartacodingclub.shop/sparta_api/rate",
+                    data: {},
+                    success: function (response) {
+                        $("#rate").append(response['rate']);
+                    }
+                })
+            }
+
+            function initializeOrderList() {
+                $('.order-list').empty()
+                $.ajax({
+                    type: "GET",
+                    url: "/order",
+                    data: {},
+                    success: function (response) {
+                        let orders = response['orders'];
+
+                        for (let i = 0; i < orders.length; ++i) {
+                            let orderer = orders[i]['orderer']
+                            let amount = orders[i]['amount']
+                            let address = orders[i]['address']
+                            let phoneNumber = orders[i]['phoneNumber']
+
+                            let temp_html = `<tr>
+                                             <th scope="row">${orderer}</th>
+                                             <td>${amount}</td>
+                                             <td>${address}</td>
+                                             <td>${phoneNumber}</td>
+                                         </tr>`;
+
+                            $('.order-list').append(temp_html);
+                        }
+                    }
+                })
+            }
+
+            function order() {
+                let orderer = $('#orderer').val()
+                let amount = $('#inputGroupSelect01').val()
+                let address = $('#address').val()
+                let phoneNumber = $('#phone-number').val()
+
+                $.ajax({
+                    type: "POST",
+                    url: "/order",
+                    data: { orderer_give: orderer, amount_give: amount, address_give: address, phoneNumber_give: phoneNumber},
+                    success: function (response) {
+                        alert(response['msg'])
+                        window.location.reload();
+                    }
+                })
+            }
+        </script>
+
+    </head>
+
+    <body>
+
+        <div class="wrap">
+            <img class="card-img" src="https://t1.daumcdn.net/cfile/tistory/2216B54057FED0C339" alt="Card image">
+            <h1 class="itemName">스파르타 팝니다.</h1><span class="price">가격 : 999,999,999,999 원</span>
+            <p>그리스 펠로폰네소스 반도 남부에 있는 도시. 고대 그리스 시대의 도시국가로 유명하다.
+                고대 그리스어로는 스파르타가 아니라 스파르테(Σπάρτη)이나 이는 아티카식이며, 도리아식으론 스파르타(Σπάρτα)이므로 딱히 틀린 명칭은 아니다.
+                참고로 오늘날에는 '스파르티'라고 읽는데 Η/η 모음 읽는 법이 바뀌었기 때문이다.
+                스파르타는 건국왕 라케다이몬의 아내인 스파르타의 이름을 딴 것이며, 당시 폴리스의 공식 명칭은 라케다이몬(Λακεδαίμον = 라케대몬), 혹은 라케다이모니아(Λακεδαιμονία=라케대모니아)였다.
+                때문에 스파르타 전사들의 방패에는 '라케다이몬'의 첫 글자인 대문자 '람다(Λ)'가 그려져 있었고 라케다이몬과 스파르타라는 이름은 서로 통용되었다.
+                고대 스파르타 특유의 군인 양성방법 스파르타식 교육으로 유명하여, 현대에도 혹독하고 자비심 없는 비인간적인 단련 과정을 이야기할 때 흔히 인용하곤 한다.
+                '스파르타식'이란 말은 여기서 유래된 것.
+                그러나 스파르타식 교육 말고도, 시민의 정치참여와 안정성을 적절하게 타협시킨 혼합정 시스템으로도 유명하다.</p>
+            <p id="rate">달러 · 원 환율 : </p>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="orderName">주문자 이름</span>
+                </div>
+                <input type="text" class="form-control" id="orderer" placeholder="이름을 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">수량</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01">
+                    <option selected> -- 수량을 선택하세요 -- </option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">주소</span>
+                </div>
+                <input type="text" class="form-control" id="address" placeholder="주소를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">전화번호</span>
+                </div>
+                <input type="text" class="form-control" id="phone-number" placeholder="전화번호를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <button onclick="order()" type="button" class="btn btn-primary orderBtn">주문하기</button>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">이름</th>
+                    <th scope="col">수량</th>
+                    <th scope="col">주소</th>
+                    <th scope="col">전화번호</th>
+                </tr>
+                </thead>
+                <tbody class="order-list">
+                </tbody>
+            </table>
+
+        </div>
+
+    </body>
+
+</html>
